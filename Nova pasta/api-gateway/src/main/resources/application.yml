@@ -1,0 +1,26 @@
+server:
+  port: 8080 # O Gateway vai rodar na porta 8080, a porta padrão para APIs web
+
+spring:
+  application:
+    name: API-GATEWAY # Nome do serviço no Eureka
+  cloud:
+    gateway:
+      routes:
+        # Rota para o serviço de pagamento
+        - id: payment-service-route # Um nome único para a rota
+          uri: lb://PAYMENT-SERVICE # 'lb' significa 'load balancer'. O Gateway vai pedir ao Eureka o endereço do 'PAYMENT-SERVICE'
+          predicates:
+            - Path=/api/payments/** # Todas as requisições que começarem com /api/payments/... serão enviadas para este serviço
+
+        # --- Adicionaríamos a rota para o user-service aqui ---
+        # - id: user-service-route
+        #   uri: lb://USER-SERVICE
+        #   predicates:
+        #     - Path=/api/users/**
+
+# Configuração para se conectar ao Eureka
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
